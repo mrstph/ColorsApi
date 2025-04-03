@@ -1,7 +1,9 @@
-﻿using ColorsApi.DTO;
+﻿using ColorsApi.Database;
+using ColorsApi.DTO;
 using ColorsApi.Models;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ColorsApi.Controllers;
 
@@ -9,36 +11,27 @@ namespace ColorsApi.Controllers;
 [Route("api/colorpalettes")]
 [Consumes("application/json")]
 [Produces("application/json")]
-public class ColorPaletteController : ControllerBase
+public class ColorPaletteController(ColorDbContext dbContext) : ControllerBase
 {
     [HttpGet]
-    public ActionResult GetColors()
+    public async Task<ActionResult> GetColors()
     {
+        var palettes = await dbContext.Palettes
+            .Include(p => p.Colors)
+            .ToListAsync();
+
         ColorDto response = new()
         {
-            Palettes = new List<ColorPalette>()
+            Palettes = palettes.Select(p => new ColorPalette
             {
-                new ColorPalette()
+                Colors = p.Colors.Select(c => new ColorModel
                 {
-                    Colors = new List<ColorModel>()
-                    {
-                        new ColorModel() { Type = 0, Red = 180, Green = 50, Blue = 120 },
-                        new ColorModel() { Type = 1, Red = 53, Green = 168, Blue = 178 },
-                        new ColorModel() { Type = 2, Red = 232, Green = 56, Blue = 202 },
-                        new ColorModel() { Type = 3, Red = 56, Green = 90, Blue = 76 },
-                    }
-                },
-                new ColorPalette()
-                {
-                    Colors = new List<ColorModel>()
-                    {
-                        new ColorModel() { Type = 0, Red = 180, Green = 50, Blue = 120 },
-                        new ColorModel() { Type = 1, Red = 53, Green = 168, Blue = 178 },
-                        new ColorModel() { Type = 2, Red = 232, Green = 56, Blue = 202 },
-                        new ColorModel() { Type = 3, Red = 56, Green = 90, Blue = 76 },
-                    }
-                },
-            }
+                    Type = c.Type,
+                    Red = c.Red,
+                    Green = c.Green,
+                    Blue = c.Blue
+                }).ToList()
+            }).ToList()
         };
 
         return Ok(response);

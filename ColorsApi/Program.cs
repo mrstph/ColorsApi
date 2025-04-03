@@ -1,5 +1,8 @@
 
 using ColorsApi.Configurations;
+using ColorsApi.Database;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace ColorsApi;
 
@@ -8,6 +11,9 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddDbContext<ColorDbContext>(options =>
+            options.UseNpgsql(builder.Configuration.GetConnectionString("ColorsDb")));
 
         // Add services to the container.
 
