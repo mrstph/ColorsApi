@@ -12,6 +12,7 @@ services:
       # Aspire Dashboard
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://colorsapi.aspire-dashboard:18889
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc-
+      - ConnectionStrings:ColorsDb=Host=colorsapi.postgres:5432;Database=colorsapi;Username=postgres;Password=postgres
  
   colorsapi.aspire-dashboard:
     image: mcr.microsoft.com/dotnet/aspire-dashboard:9.0

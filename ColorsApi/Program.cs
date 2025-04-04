@@ -1,4 +1,5 @@
 
+using System.Threading.Tasks;
 using ColorsApi.Configurations;
 using ColorsApi.Database;
 using Microsoft.EntityFrameworkCore;
@@ -6,9 +7,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace ColorsApi;
 
-public class Program
+public static class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,7 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            await app.ApplyMigrationsAsync();
         }
 
         app.UseHttpsRedirection();
@@ -39,5 +41,24 @@ public class Program
         app.MapControllers();
 
         app.Run();
+    }
+
+    public static async Task ApplyMigrationsAsync(this WebApplication app)
+    {
+        using IServiceScope scope = app.Services.CreateScope();
+        await using ColorDbContext applicationDbContext =
+            scope.ServiceProvider.GetRequiredService<ColorDbContext>();
+
+        try
+        {
+            await applicationDbContext.Database.MigrateAsync();
+            app.Logger.LogInformation("ColorsDatabase migrated successfully.");
+
+        }
+        catch (Exception e)
+        {
+            app.Logger.LogError(e, "An error occurred while applying database migrations.");
+            throw;
+        }
     }
 }
