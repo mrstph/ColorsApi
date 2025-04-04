@@ -1,7 +1,6 @@
 ﻿using ColorsApi.Database;
 using ColorsApi.DTO;
 using ColorsApi.Entities;
-using ColorsApi.Models;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,11 +21,11 @@ public class ColorPaletteController(ColorDbContext dbContext) : ControllerBase
             .Where(p => !p.IsArchived)
             .ToListAsync();
 
-        ColorDto response = new()
+        ColorResponseDto response = new()
         {
-            Palettes = palettes.Select(p => new ColorPalette
+            Palettes = palettes.Select(p => new ColorPaletteDto
             {
-                Colors = p.Colors.Select(c => new ColorModel
+                Colors = p.Colors.Select(c => new ColorDto
                 {
                     Type = c.Type,
                     Red = c.Red,
@@ -40,7 +39,7 @@ public class ColorPaletteController(ColorDbContext dbContext) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<ColorPalette>> CreatePalette([FromBody] ColorPalette colorPalette)
+    public async Task<ActionResult<ColorPaletteDto>> CreatePalette([FromBody] ColorPaletteDto colorPalette)
     {
         if (colorPalette == null || colorPalette.Colors.Count != 4)
         {
@@ -80,7 +79,7 @@ public class ColorPaletteController(ColorDbContext dbContext) : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<ActionResult<ColorPalette>> DeletePalette(int id)
+    public async Task<ActionResult<ColorPaletteDto>> DeletePalette(int id)
     {
         try
         {

@@ -1,11 +1,9 @@
-﻿using ColorsApi.Models;
-
-namespace ColorsApi.DTO;
+﻿namespace ColorsApi.DTO;
 
 public class ColorDto
 {
-    //public List<ColorPalette> Palettes { get; set; } = new List<ColorPalette>();
-    //public List<List<ColorModel>> Palettes { get; set; } = new();
-
-    public List<ColorPalette> Palettes { get; set; } = new();
+    public int Type { get; set; }
+    public int Red { get; set; }
+    public int Green { get; set; }
+    public int Blue { get; set; }
 }
