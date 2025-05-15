@@ -1,6 +1,4 @@
-﻿using ColorsApi.Models;
-
-namespace ColorsApi.Entities;
+﻿namespace ColorsApi.Entities;
 
 public class ColorPaletteEntity
 {

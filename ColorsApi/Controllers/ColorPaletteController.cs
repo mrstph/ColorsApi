@@ -1,12 +1,14 @@
 ﻿using ColorsApi.Database;
 using ColorsApi.DTO;
 using ColorsApi.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ColorsApi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/colorpalettes")]
 [Consumes("application/json")]
