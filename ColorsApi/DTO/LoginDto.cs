@@ -1,4 +1,6 @@
-﻿namespace ColorsApi.DTO;
+﻿using FluentValidation;
+
+namespace ColorsApi.DTO;
 
 public class LoginDto
 {
